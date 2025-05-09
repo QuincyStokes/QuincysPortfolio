@@ -1,0 +1,35 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "Game Developer Portfolio Website",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QuincyStokes/QuincysPortfolio.git"
+  },
+  "keywords": [
+    "portfolio",
+    "game-development",
+    "software-engineering"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/QuincyStokes/QuincysPortfolio/issues"
+  },
+  "homepage": "https://github.com/QuincyStokes/QuincysPortfolio#readme",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-ejs-layouts": "^2.5.1",
+    "nodemailer": "^6.9.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
