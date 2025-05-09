@@ -1,31 +1,255 @@
-<section class="projects">
-    <h1>My Projects</h1>
-    <div class="projects-grid">
-        <div class="project-card">
-            <img src="https://via.placeholder.com/400x200" alt="Project 1" class="project-image">
-            <div class="project-info">
-                <h3>Adventure Game</h3>
-                <p>A 3D adventure game built with Unity, featuring dynamic environments and engaging gameplay mechanics.</p>
-                <p><strong>Technologies:</strong> Unity, C#, Blender</p>
-            </div>
-        </div>
-
-        <div class="project-card">
-            <img src="https://via.placeholder.com/400x200" alt="Project 2" class="project-image">
-            <div class="project-info">
-                <h3>Puzzle Platformer</h3>
-                <p>An innovative puzzle platformer that combines physics-based gameplay with unique mechanics.</p>
-                <p><strong>Technologies:</strong> Unreal Engine, C++</p>
-            </div>
-        </div>
-
-        <div class="project-card">
-            <img src="https://via.placeholder.com/400x200" alt="Project 3" class="project-image">
-            <div class="project-info">
-                <h3>Mobile Game</h3>
-                <p>A casual mobile game with addictive gameplay and social features.</p>
-                <p><strong>Technologies:</strong> Unity, C#, Firebase</p>
-            </div>
-        </div>
+<div class="projects-grid">
+<div class="project-card" data-images='["/images/StarlightStrayHome.png","/images/LaikaDialogue.png","/images/LaikaDialogue2.png"]' data-alts='["Starlight Stray Home","Laika Dialogue 1","Laika Dialogue 2"]'>
+    <div class="card-title">Starlight Stray</div>
+    <div class="card-description">
+        A 2D atmospheric dungeon crawler, heavily inspired by the story of Laika the space dog. Features enthralling dialogue and cutscenes, immersive music, and beautiful art. Made in Unity for a 48-hour game jam with a team of 6.
     </div>
-</section> 
+    <div class="card-skills">
+        <span class="skill-tag">Unity</span>
+        <span class="skill-tag">C#</span>
+        <span class="skill-tag">Game Design</span>
+        <span class="skill-tag">Pixel Art</span>
+        <span class="skill-tag">Teamwork</span>
+        <span class="skill-tag">Music</span>
+    </div>
+    <div class="card-links">
+        <a href="https://github.com/QuincyStokes/GGJ2025" class="card-link" target="_blank">Repository</a>
+        <a href="https://quincystokes.itch.io/starlightstray" class="card-link" target="_blank">Game Jam Page</a>
+    </div>
+    <div class="card-carousel">
+        <button class="carousel-btn left">❮</button>
+        <img src="/images/StarlightStrayHome.png" alt="Starlight Stray Home" class="carousel-img">
+        <button class="carousel-btn right">❯</button>
+    </div>
+    <div class="carousel-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+</div>
+
+<div class="project-card" data-images='["/images/StarlightStrayHome.png","/images/LaikaDialogue.png","/images/LaikaDialogue2.png"]' data-alts='["Project Example 1","Project Example 2","Project Example 3"]'>
+    <div class="card-title">Project Title</div>
+    <div class="card-description">
+        This is a brief description of the project. It explains what the project is about and what makes it interesting or unique.
+    </div>
+    <div class="card-skills">
+        <span class="skill-tag">JavaScript</span>
+        <span class="skill-tag">Node.js</span>
+        <span class="skill-tag">CSS</span>
+    </div>
+    <div class="card-links">
+        <a href="#" class="card-link" target="_blank">Repository</a>
+        <a href="#" class="card-link" target="_blank">Live Site</a>
+    </div>
+    <div class="card-carousel">
+        <button class="carousel-btn left">❮</button>
+        <img src="/images/StarlightStrayHome.png" alt="Project Example 1" class="carousel-img">
+        <button class="carousel-btn right">❯</button>
+    </div>
+    <div class="carousel-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+</div>
+</div>
+
+<script>
+console.log('[Carousel Debug] Script loaded and running');
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.project-card').forEach(function(card, cardIdx) {
+        const images = JSON.parse(card.getAttribute('data-images'));
+        const alts = JSON.parse(card.getAttribute('data-alts'));
+        let currentIndex = 0;
+        const img = card.querySelector('.carousel-img');
+        const dots = card.querySelectorAll('.dot');
+        const leftBtn = card.querySelector('.carousel-btn.left');
+        const rightBtn = card.querySelector('.carousel-btn.right');
+
+        if (!img) console.warn(`[Carousel Debug] Card ${cardIdx}: .carousel-img not found.`);
+        if (!leftBtn) console.warn(`[Carousel Debug] Card ${cardIdx}: .carousel-btn.left not found.`);
+        if (!rightBtn) console.warn(`[Carousel Debug] Card ${cardIdx}: .carousel-btn.right not found.`);
+        if (dots.length === 0) console.warn(`[Carousel Debug] Card ${cardIdx}: .dot elements not found.`);
+
+        function updateCarousel() {
+            if (!img) return;
+            img.src = images[currentIndex];
+            img.alt = alts[currentIndex];
+            dots.forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === currentIndex);
+            });
+            console.log(`[Carousel Debug] Card ${cardIdx}: Updated to image index ${currentIndex} (src: ${images[currentIndex]}, alt: ${alts[currentIndex]})`);
+        }
+
+        if (leftBtn) {
+            leftBtn.addEventListener('click', function() {
+                const prevIndex = currentIndex;
+                currentIndex = (currentIndex - 1 + images.length) % images.length;
+                console.log(`[Carousel Debug] Card ${cardIdx}: Left button clicked. Index: ${prevIndex} -> ${currentIndex}`);
+                updateCarousel();
+            });
+            console.log(`[Carousel Debug] Card ${cardIdx}: Left button event attached.`);
+        }
+        if (rightBtn) {
+            rightBtn.addEventListener('click', function() {
+                const prevIndex = currentIndex;
+                currentIndex = (currentIndex + 1) % images.length;
+                console.log(`[Carousel Debug] Card ${cardIdx}: Right button clicked. Index: ${prevIndex} -> ${currentIndex}`);
+                updateCarousel();
+            });
+            console.log(`[Carousel Debug] Card ${cardIdx}: Right button event attached.`);
+        }
+        dots.forEach((dot, idx) => {
+            dot.addEventListener('click', function() {
+                const prevIndex = currentIndex;
+                currentIndex = idx;
+                console.log(`[Carousel Debug] Card ${cardIdx}: Dot ${idx} clicked. Index: ${prevIndex} -> ${currentIndex}`);
+                updateCarousel();
+            });
+        });
+        console.log(`[Carousel Debug] Card ${cardIdx}: Carousel initialized with ${images.length} images.`);
+        updateCarousel();
+    });
+});
+</script>
+
+<style>
+body {
+    background: #232323;
+}
+.project-card {
+    background: #222;
+    color: #f3f3f3;
+    border-radius: 18px;
+    box-shadow: 0 6px 32px rgba(0,0,0,0.18), 0 1.5px 6px rgba(0,0,0,0.12);
+    max-width: 420px;
+    margin: 3rem auto;
+    padding: 2rem 2rem 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.project-card:hover {
+    transform: translateY(-6px) scale(1.025);
+    box-shadow: 0 12px 48px rgba(0,0,0,0.22), 0 3px 12px rgba(0,0,0,0.16);
+}
+.card-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+}
+.card-description {
+    font-size: 1.08rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #d0d0d0;
+}
+.card-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+.skill-tag {
+    background: #3535ff;
+    color: #fff;
+    border-radius: 12px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    box-shadow: 0 1px 4px rgba(53,53,255,0.08);
+}
+.card-links {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+    justify-content: center;
+}
+.card-link {
+    color: #7c6fff;
+    background: #191933;
+    padding: 0.5rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+}
+.card-link:hover {
+    background: #7c6fff;
+    color: #fff;
+}
+.card-carousel {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 0.7rem;
+}
+.carousel-img {
+    max-width: 90%;
+    max-height: 220px;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    background: #191933;
+}
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    color: #fff;
+    border: none;
+    font-size: 2.2rem;
+    cursor: pointer;
+    z-index: 2;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+}
+.carousel-btn.left {
+    left: 0;
+}
+.carousel-btn.right {
+    right: 0;
+}
+.carousel-btn:hover {
+    color: #7c6fff;
+}
+.carousel-dots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 0.2rem;
+}
+.dot {
+    width: 10px;
+    height: 10px;
+    background: #444;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+.dot.active {
+    background: #7c6fff;
+}
+@media (max-width: 600px) {
+    .project-card {
+        max-width: 98vw;
+        padding: 1rem 0.5rem;
+    }
+    .carousel-img {
+        max-width: 98vw;
+        max-height: 160px;
+    }
+}
+</style>

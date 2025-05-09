@@ -1,0 +1,168 @@
+body {
+    background: #232323;
+}
+.project-card {
+    background: #28243a;
+    color: #f3f3f3;
+    border-radius: 18px;
+    box-shadow: 0 6px 32px rgba(0,0,0,0.18), 0 1.5px 6px rgba(0,0,0,0.12);
+    flex: 1 1 350px;
+    min-width: 320px;
+    max-width: 500px;
+    margin: 3rem 0;
+    padding: 2.5rem 2.5rem 2rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.project-card:hover {
+    transform: translateY(-6px) scale(1.025);
+    box-shadow: 0 12px 48px rgba(0,0,0,0.22), 0 3px 12px rgba(0,0,0,0.16);
+}
+.card-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+}
+.card-description {
+    font-size: 1.08rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #d0d0d0;
+}
+.card-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+.skill-tag {
+    background: #23243a;
+    color: #bfc2e2;
+    border-radius: 10px;
+    padding: 0.18rem 0.7rem;
+    font-size: 0.92rem;
+    font-weight: 400;
+    box-shadow: none;
+    border: 1px solid #3535ff22;
+}
+.card-links {
+    display: flex;
+    gap: 1.2rem;
+    margin-bottom: 1.2rem;
+    justify-content: center;
+}
+.card-link {
+    color: #191933;
+    background: #36ffc2;
+    padding: 0.7rem 1.6rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.08rem;
+    box-shadow: 0 2px 8px #36ffc233;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    border: none;
+    outline: none;
+}
+.card-link:hover {
+    background: #1be6a7;
+    color: #191933;
+    box-shadow: 0 4px 16px #36ffc244;
+}
+.card-carousel {
+    width: 100%;
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: 0.7rem;
+    padding: 0;
+    background: #191933;
+    border-radius: 12px;
+    overflow: hidden;
+}
+.carousel-img {
+    width: 100%;
+    height: 100%;
+    max-height: 420px;
+    min-height: 220px;
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+    background: #191933;
+    flex: 1 1 auto;
+    display: block;
+}
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    color: #fff;
+    border: none;
+    font-size: 2.5rem;
+    cursor: pointer;
+    z-index: 2;
+    width: 54px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+    padding: 0;
+}
+.carousel-btn.left {
+    left: 0.5rem;
+}
+.carousel-btn.right {
+    right: 0.5rem;
+}
+.carousel-btn:hover {
+    color: #7c6fff;
+}
+.carousel-dots {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 0.2rem;
+}
+.dot {
+    width: 10px;
+    height: 10px;
+    background: #444;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background 0.2s;
+    cursor: pointer;
+}
+.dot.active {
+    background: #7c6fff;
+}
+@media (max-width: 1100px) {
+    .projects-grid {
+        gap: 1.2rem;
+        max-width: 98vw;
+    }
+    .project-card {
+        min-width: 240px;
+        max-width: 98vw;
+        padding: 1.2rem 0.5rem;
+        margin: 2rem 0;
+    }
+}
+.projects-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    margin: 0 auto 2rem auto;
+    max-width: 1400px;
+} 
