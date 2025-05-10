@@ -1,9 +1,9 @@
 body {
-    background: #232323;
+    background: var(--light-color);
 }
 .project-card {
-    background: #28243a;
-    color: #f3f3f3;
+    background: var(--card-bg);
+    color: var(--text-color);
     border-radius: 18px;
     box-shadow: 0 6px 32px rgba(0,0,0,0.18), 0 1.5px 6px rgba(0,0,0,0.12);
     flex: 1 1 350px;
@@ -26,12 +26,13 @@ body {
     text-align: center;
     margin-bottom: 0.5rem;
     letter-spacing: 1px;
+    color: var(--primary-color);
 }
 .card-description {
     font-size: 1.08rem;
     text-align: center;
     margin-bottom: 1rem;
-    color: #d0d0d0;
+    color: var(--text-color);
 }
 .card-skills {
     display: flex;
@@ -41,8 +42,8 @@ body {
     margin-bottom: 1rem;
 }
 .skill-tag {
-    background: #23243a;
-    color: #bfc2e2;
+    background: var(--card-bg);
+    color: var(--primary-color);
     border-radius: 10px;
     padding: 0.18rem 0.7rem;
     font-size: 0.92rem;
@@ -57,8 +58,8 @@ body {
     justify-content: center;
 }
 .card-link {
-    color: #191933;
-    background: #36ffc2;
+    color: var(--card-bg);
+    background: var(--accent-color);
     padding: 0.7rem 1.6rem;
     border-radius: 10px;
     text-decoration: none;
@@ -70,8 +71,8 @@ body {
     outline: none;
 }
 .card-link:hover {
-    background: #1be6a7;
-    color: #191933;
+    background: var(--primary-color);
+    color: var(--card-bg);
     box-shadow: 0 4px 16px #36ffc244;
 }
 .card-carousel {
@@ -83,7 +84,7 @@ body {
     position: relative;
     margin-bottom: 0.7rem;
     padding: 0;
-    background: #191933;
+    background: var(--nav-bg);
     border-radius: 12px;
     overflow: hidden;
 }
@@ -95,7 +96,7 @@ body {
     object-fit: contain;
     border-radius: 10px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.18);
-    background: #191933;
+    background: var(--nav-bg);
     flex: 1 1 auto;
     display: block;
 }
@@ -104,7 +105,7 @@ body {
     top: 50%;
     transform: translateY(-50%);
     background: transparent;
-    color: #fff;
+    color: var(--text-color);
     border: none;
     font-size: 2.5rem;
     cursor: pointer;
@@ -124,7 +125,7 @@ body {
     right: 0.5rem;
 }
 .carousel-btn:hover {
-    color: #7c6fff;
+    color: var(--primary-color);
 }
 .carousel-dots {
     display: flex;
@@ -135,14 +136,14 @@ body {
 .dot {
     width: 10px;
     height: 10px;
-    background: #444;
+    background: var(--shadow-color);
     border-radius: 50%;
     display: inline-block;
     transition: background 0.2s;
     cursor: pointer;
 }
 .dot.active {
-    background: #7c6fff;
+    background: var(--primary-color);
 }
 @media (max-width: 1100px) {
     .projects-grid {
