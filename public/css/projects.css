@@ -1,5 +1,5 @@
 body {
-    background: var(--light-color);
+    background: transparent;
 }
 .project-card {
     background: var(--card-bg);

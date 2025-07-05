@@ -53,4 +53,31 @@ document.querySelectorAll('.project-card').forEach(card => {
     card.style.transform = 'translateY(20px)';
     card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     observer.observe(card);
-}); 
+});
+
+// Parallax Scrolling Effect
+const parallaxBg = document.querySelector('.parallax-bg');
+if (parallaxBg) {
+    // Ensure background covers full document height
+    function updateParallaxHeight() {
+        const documentHeight = Math.max(
+            document.body.scrollHeight,
+            document.body.offsetHeight,
+            document.documentElement.clientHeight,
+            document.documentElement.scrollHeight,
+            document.documentElement.offsetHeight
+        );
+        parallaxBg.style.height = `${documentHeight}px`;
+    }
+    
+    // Update height on load and resize
+    updateParallaxHeight();
+    window.addEventListener('resize', updateParallaxHeight);
+    
+    // Parallax scroll effect with smooth movement
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const rate = scrolled * -0.5; // Slower, smoother parallax effect
+        parallaxBg.style.transform = `translateY(${rate}px)`;
+    });
+} 
