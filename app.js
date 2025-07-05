@@ -65,7 +65,3 @@ app.post('/contact', async (req, res) => {
         res.status(500).json({ success: false, error: 'Failed to send message' });
     }
 });
-
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-}); 
