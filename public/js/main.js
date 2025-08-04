@@ -2,11 +2,15 @@
 const themeToggle = document.getElementById('themeToggle');
 const themeIcon = themeToggle ? themeToggle.querySelector('i') : null;
 
-// Check for saved theme preference
+// Check for saved theme preference and apply immediately
 const savedTheme = localStorage.getItem('theme');
 if (savedTheme) {
     document.documentElement.setAttribute('data-theme', savedTheme);
     if (themeIcon) updateThemeIcon(savedTheme);
+} else {
+    // Default to light theme if no preference is saved
+    document.documentElement.setAttribute('data-theme', 'light');
+    if (themeIcon) updateThemeIcon('light');
 }
 
 // Theme toggle click handler
