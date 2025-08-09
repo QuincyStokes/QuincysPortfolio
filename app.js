@@ -11,9 +11,25 @@ const MAX_ATTEMPTS = 3; // Max 3 attempts per IP per window
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () =>
-  console.log(`Listening on port ${PORT}`)
-);
+
+// Auto-import blog posts on server start
+async function initializeBlog() {
+    try {
+        const blogManager = new BlogManager();
+        await blogManager.init();
+        await blogManager.importAllPosts();
+        await blogManager.close();
+        console.log('Blog posts auto-imported successfully!');
+    } catch (error) {
+        console.error('Error auto-importing blog posts:', error);
+    }
+}
+
+app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
+    // Initialize blog after server starts
+    initializeBlog();
+});
 
 
 // Set up EJS as the view engine
@@ -31,6 +47,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Import blog manager for auto-import
+const BlogManager = require('./database/blogManager');
+
 // Routes
 app.get('/', (req, res) => {
     res.render('index');
@@ -43,6 +62,9 @@ app.get('/projects', (req, res) => {
 app.get('/contact', (req, res) => {
     res.render('contact');
 });
+
+// Blog routes
+app.use('/blog', require('./routes/blog'));
 
 // Contact form submission
 app.post('/contact', async (req, res) => {
