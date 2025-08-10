@@ -8,6 +8,7 @@ class BlogManager {
     constructor() {
         this.dbPath = path.join(__dirname, 'blog.db');
         this.postsDir = path.join(__dirname, '..', 'posts');
+        this.archiveDir = path.join(this.postsDir, 'archive');
         this.db = null;
     }
 
@@ -87,7 +88,78 @@ class BlogManager {
         }
     }
 
-    // Import all markdown files from posts directory
+    // Archive a post by moving it to archive directory and marking as archived in DB
+    async archivePost(postData) {
+        try {
+            // Create archive directory if it doesn't exist
+            if (!fs.existsSync(this.archiveDir)) {
+                fs.mkdirSync(this.archiveDir, { recursive: true });
+            }
+
+            // Create archived post content with frontmatter
+            const archivedContent = `---
+title: "${postData.title}"
+category: "${postData.category}"
+excerpt: "${postData.excerpt}"
+published: false
+publishedAt: "${postData.publishedAt}"
+archivedAt: "${new Date().toISOString()}"
+---
+
+${postData.content}`;
+
+            // Save to archive directory with timestamp
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const archiveFileName = `${timestamp}-${postData.slug}.md`;
+            const archivePath = path.join(this.archiveDir, archiveFileName);
+            
+            fs.writeFileSync(archivePath, archivedContent);
+            console.log(`Post "${postData.title}" archived to ${archivePath}`);
+
+            // Mark as archived in database
+            return new Promise((resolve, reject) => {
+                const query = `
+                    UPDATE blog_posts 
+                    SET is_archived = 1, is_published = 0, updated_at = ?
+                    WHERE slug = ?
+                `;
+
+                this.db.run(query, [new Date().toISOString(), postData.slug], function(err) {
+                    if (err) {
+                        console.error('Error archiving post in database:', err);
+                        reject(err);
+                    } else {
+                        console.log(`Post "${postData.title}" marked as archived in database`);
+                        resolve(this.changes);
+                    }
+                });
+            });
+        } catch (error) {
+            console.error('Error archiving post:', error);
+            throw error;
+        }
+    }
+
+    // Get all posts from database that are not archived
+    async getAllActivePosts() {
+        return new Promise((resolve, reject) => {
+            const query = `
+                SELECT id, title, slug, content, excerpt, category, published_at, is_published
+                FROM blog_posts 
+                WHERE is_archived = 0
+            `;
+
+            this.db.all(query, (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            });
+        });
+    }
+
+    // Import all markdown files from posts directory and archive missing posts
     async importAllPosts() {
         try {
             if (!fs.existsSync(this.postsDir)) {
@@ -96,8 +168,9 @@ class BlogManager {
                 return;
             }
 
+            // Get all markdown files from posts directory (excluding archive)
             const files = fs.readdirSync(this.postsDir)
-                .filter(file => file.endsWith('.md'))
+                .filter(file => file.endsWith('.md') && !file.startsWith('.'))
                 .sort((a, b) => {
                     // Sort by filename (which should include date)
                     return a.localeCompare(b);
@@ -105,16 +178,37 @@ class BlogManager {
 
             console.log(`Found ${files.length} markdown files to import`);
 
+            // Get all active posts from database
+            const dbPosts = await this.getAllActivePosts();
+            console.log(`Found ${dbPosts.length} active posts in database`);
+
+            // Create a set of slugs from current files
+            const currentSlugs = new Set();
             for (const file of files) {
                 const filePath = path.join(this.postsDir, file);
                 const postData = this.parseMarkdownFile(filePath);
-                
                 if (postData) {
+                    currentSlugs.add(postData.slug);
                     await this.upsertPost(postData);
                 }
             }
 
-            console.log('All posts imported successfully!');
+            // Find posts that exist in database but not in files (missing posts)
+            const missingPosts = dbPosts.filter(dbPost => !currentSlugs.has(dbPost.slug));
+            
+            if (missingPosts.length > 0) {
+                console.log(`Found ${missingPosts.length} posts that are no longer in the posts directory. Archiving them...`);
+                
+                for (const missingPost of missingPosts) {
+                    await this.archivePost(missingPost);
+                }
+                
+                console.log(`Successfully archived ${missingPosts.length} posts`);
+            } else {
+                console.log('No missing posts found - all database posts have corresponding files');
+            }
+
+            console.log('All posts imported and archived successfully!');
         } catch (error) {
             console.error('Error importing posts:', error);
         }
@@ -125,8 +219,8 @@ class BlogManager {
         return new Promise((resolve, reject) => {
             const query = `
                 INSERT OR REPLACE INTO blog_posts 
-                (title, slug, content, excerpt, category, published_at, is_published, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                (title, slug, content, excerpt, category, published_at, is_published, is_archived, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?)
             `;
 
             const params = [
@@ -152,7 +246,7 @@ class BlogManager {
         });
     }
 
-    // Get all published posts (paginated)
+    // Get all published posts (paginated) - excluding archived posts
     async getPosts(page = 1, limit = 5) {
         return new Promise((resolve, reject) => {
             const offset = (page - 1) * limit;
@@ -160,7 +254,7 @@ class BlogManager {
                 SELECT id, title, slug, excerpt, category, published_at, 
                        LENGTH(content) as content_length
                 FROM blog_posts 
-                WHERE is_published = 1 
+                WHERE is_published = 1 AND is_archived = 0
                 ORDER BY published_at DESC 
                 LIMIT ? OFFSET ?
             `;
@@ -180,10 +274,10 @@ class BlogManager {
         });
     }
 
-    // Get total count of published posts
+    // Get total count of published posts - excluding archived posts
     async getPostCount() {
         return new Promise((resolve, reject) => {
-            const query = 'SELECT COUNT(*) as count FROM blog_posts WHERE is_published = 1';
+            const query = 'SELECT COUNT(*) as count FROM blog_posts WHERE is_published = 1 AND is_archived = 0';
             
             this.db.get(query, (err, row) => {
                 if (err) {
@@ -195,13 +289,13 @@ class BlogManager {
         });
     }
 
-    // Get single post by slug
+    // Get single post by slug - excluding archived posts
     async getPostBySlug(slug) {
         return new Promise((resolve, reject) => {
             const query = `
                 SELECT id, title, slug, content, excerpt, category, published_at
                 FROM blog_posts 
-                WHERE slug = ? AND is_published = 1
+                WHERE slug = ? AND is_published = 1 AND is_archived = 0
             `;
 
             this.db.get(query, [slug], (err, row) => {
@@ -219,7 +313,7 @@ class BlogManager {
         });
     }
 
-    // Get posts by category
+    // Get posts by category - excluding archived posts
     async getPostsByCategory(category, page = 1, limit = 5) {
         return new Promise((resolve, reject) => {
             const offset = (page - 1) * limit;
@@ -227,7 +321,7 @@ class BlogManager {
                 SELECT id, title, slug, excerpt, category, published_at, 
                        LENGTH(content) as content_length
                 FROM blog_posts 
-                WHERE is_published = 1 AND category = ?
+                WHERE is_published = 1 AND is_archived = 0 AND category = ?
                 ORDER BY published_at DESC 
                 LIMIT ? OFFSET ?
             `;
@@ -241,6 +335,26 @@ class BlogManager {
                         readTime: Math.ceil((row.content_length / 5) / 200)
                     }));
                     resolve(posts);
+                }
+            });
+        });
+    }
+
+    // Get archived posts (for admin purposes)
+    async getArchivedPosts() {
+        return new Promise((resolve, reject) => {
+            const query = `
+                SELECT id, title, slug, excerpt, category, published_at, updated_at
+                FROM blog_posts 
+                WHERE is_archived = 1
+                ORDER BY updated_at DESC
+            `;
+
+            this.db.all(query, (err, rows) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(rows);
                 }
             });
         });

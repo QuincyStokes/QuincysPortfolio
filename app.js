@@ -12,9 +12,15 @@ const MAX_ATTEMPTS = 3; // Max 3 attempts per IP per window
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Import database initialization
+const { initDatabase } = require('./database/init');
+
 // Auto-import blog posts on server start
 async function initializeBlog() {
     try {
+        // Initialize database first (adds is_archived column if needed)
+        await initDatabase();
+        
         const blogManager = new BlogManager();
         await blogManager.init();
         await blogManager.importAllPosts();
