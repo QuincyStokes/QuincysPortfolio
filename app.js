@@ -58,15 +58,15 @@ const BlogManager = require('./database/blogManager');
 
 // Routes
 app.get('/', (req, res) => {
-    res.render('index');
+    res.render('index', { currentPage: 'home' });
 });
 
 app.get('/projects', (req, res) => {
-    res.render('projects');
+    res.render('projects', { currentPage: 'projects' });
 });
 
 app.get('/contact', (req, res) => {
-    res.render('contact');
+    res.render('contact', { currentPage: 'contact' });
 });
 
 // Blog routes

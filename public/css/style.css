@@ -183,6 +183,13 @@ body {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+.nav-links a.active {
+    color: var(--accent-color) !important;
+    background-color: rgba(78, 205, 196, 0.1) !important;
+    padding: 0.5rem 1.2rem !important;
+    border-radius: 20px !important;
+}
+
 .nav-links a::after {
     content: '';
     position: absolute;
@@ -204,11 +211,71 @@ body {
     color: #E0E0E0;
 }
 
+[data-theme="dark"] .nav-links a.active {
+    color: var(--accent-color) !important;
+    background-color: rgba(110, 231, 222, 0.15) !important;
+    padding: 0.5rem 1.2rem !important;
+    border-radius: 20px !important;
+}
+
 /* Main Content */
 .container {
     max-width: 1200px;
     margin: 80px auto 0;
     padding: 2rem;
+}
+
+/* Gradient Header Styles (matching blog style) */
+.gradient-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeInUp 0.8s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.gradient-header .section-title {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: block !important;
+    left: auto !important;
+    transform: none !important;
+    text-align: center !important;
+    position: relative;
+    font-weight: 700;
+}
+
+.gradient-header .section-title::before,
+.gradient-header .section-title::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 200px;
+    height: 2px;
+    background: var(--accent-color);
+    border-radius: 1px;
+}
+
+.gradient-header .section-title::before {
+    left: -220px;
+}
+
+.gradient-header .section-title::after {
+    right: -220px;
+}
+
+.gradient-header .header-intro {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    opacity: 0.8;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 /* Hero Section */
@@ -251,6 +318,7 @@ body {
 .hero p {
     font-size: 1.2rem;
     color: var(--text-color);
+    opacity: 0.8;
     max-width: 800px;
     margin: 0 auto;
 }
@@ -543,22 +611,6 @@ body {
     text-align: center;
 }
 
-.contact-header {
-    margin-bottom: 3rem;
-    text-align: center;
-}
-
-.contact-header h1 {
-    font-size: 3rem;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    text-shadow: 0 2px 4px var(--shadow-color);
-    animation: fadeInUp 0.8s ease-out;
-}
-
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -568,16 +620,6 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-.contact-intro {
-    font-size: 1.2rem;
-    color: var(--text-color);
-    max-width: 500px;
-    margin: 0 auto;
-    line-height: 1.6;
-    opacity: 0.9;
-    animation: fadeInUp 0.8s ease-out 0.2s both;
 }
 
 /* Contact Form */
@@ -737,12 +779,24 @@ body {
         font-size: 2rem;
     }
     
-    .contact-header h1 {
+    .gradient-header .section-title {
         font-size: 2.5rem;
-        letter-spacing: 1px;
     }
     
-    .contact-intro {
+    .gradient-header .section-title::before,
+    .gradient-header .section-title::after {
+        width: 100px;
+    }
+    
+    .gradient-header .section-title::before {
+        left: -110px;
+    }
+    
+    .gradient-header .section-title::after {
+        right: -110px;
+    }
+    
+    .header-intro {
         font-size: 1.1rem;
         padding: 0 1rem;
     }

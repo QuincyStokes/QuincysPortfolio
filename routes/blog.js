@@ -31,7 +31,8 @@ router.get('/', async (req, res) => {
 
         res.render('blog', {
             posts,
-            currentPage: page,
+            currentPage: 'blog',
+            page: page,
             totalPages,
             hasMore,
             totalPosts
@@ -58,7 +59,7 @@ router.get('/:slug', async (req, res) => {
             });
         }
 
-        res.render('blog-post', { post });
+        res.render('blog-post', { post, currentPage: 'blog' });
     } catch (error) {
         console.error('Error loading blog post:', error);
         res.status(500).render('error', { 

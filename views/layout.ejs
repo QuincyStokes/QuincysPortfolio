@@ -30,11 +30,12 @@
         <nav class="navbar">
             <a href="/" class="brand">Quincy Stokes</a>
             <ul class="nav-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="/projects">Projects</a></li>
-                <li><a href="/blog">Blog</a></li>
-                <li><a href="/contact">Contact</a></li>
+                <li><a href="/" class="<%= typeof currentPage !== 'undefined' && currentPage === 'home' ? 'active' : '' %>">Home</a></li>
+                <li><a href="/projects" class="<%= typeof currentPage !== 'undefined' && currentPage === 'projects' ? 'active' : '' %>">Projects</a></li>
+                <li><a href="/blog" class="<%= typeof currentPage !== 'undefined' && currentPage === 'blog' ? 'active' : '' %>">Blog</a></li>
+                <li><a href="/contact" class="<%= typeof currentPage !== 'undefined' && currentPage === 'contact' ? 'active' : '' %>">Contact</a></li>
             </ul>
+            <!-- Debug: Current page is: <%= typeof currentPage !== 'undefined' ? currentPage : 'undefined' %> -->
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
                 <i class="fas fa-moon"></i>
             </button>
