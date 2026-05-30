@@ -1,0 +1,87 @@
+<%#
+    Systems case-study template. This is the single most valuable page for a systems-design
+    portfolio — a hiring lead opens it to see how you THINK, not just what you shipped.
+    Fill in every [ ... ] in your own words. Add figures (diagrams, tuning spreadsheets,
+    GIFs/clips of the system running) where the <!-- figure --> comments are — those carry
+    more weight than prose. When it's ready, link to it from the GEODE sections (home +
+    projects) and add it to the nav in views/layout.ejs.
+%>
+
+<div class="page-intro">
+    <div class="section-label">Systems Case Study</div>
+    <h1>GEODE's Multiplayer System</h1>
+    <p>A fully implemented server-authoritative networking system for P2P connection in GEODE.</p>
+</div>
+
+<article class="case-study">
+    <div class="case-meta">
+        <div><span class="case-meta-label">Game</span>GEODE</div>
+        <div><span class="case-meta-label">My role</span>Solo developer</div>
+        <div><span class="case-meta-label">Tools</span>Unity · Netcode for GameObjects · C#</div>
+    </div>
+
+    <%# Placeholder gallery — GEODE's core loop. Swap these for real captures (and add an
+        8-player co-op clip in the Outcome section's figure slot) when you've recorded them. %>
+    <div class="case-gallery">
+        <figure>
+            <img src="/images/ExploreGIF.gif" alt="Exploring GEODE's procedurally generated world">
+            <figcaption>Explore</figcaption>
+        </figure>
+        <figure>
+            <img src="/images/BuildGif.gif" alt="Building defenses in GEODE">
+            <figcaption>Build</figcaption>
+        </figure>
+        <figure>
+            <img src="/images/DefendGIF.gif" alt="Defending against waves in GEODE">
+            <figcaption>Defend</figcaption>
+        </figure>
+    </div>
+
+    <section class="case-section">
+        <h2>The goal</h2>
+        <p>Low friction for players hopping on with each other &mdash; seamless connection for up to 8 players. When deciding on the authority model, server-authoritative stood out to me because of the &ldquo;single source of truth&rdquo; idea: it prevents cheating and provides a clean way to keep every client's information in sync.</p>
+    </section>
+
+    <section class="case-section">
+        <h2>Constraints</h2>
+        <p>Two constraints shaped the design. Building solo with no server budget pushed me directly toward a P2P model rather than dedicated servers. And minimizing lag meant structuring objects to send as little information across the network as possible &mdash; which became a real challenge because GEODE's worlds are procedurally generated. Replicating all of that generated state across the network was a big issue at first.</p>
+    </section>
+
+    <section class="case-section">
+        <h2>The design</h2>
+        <p>Rather than replicate the generated world, I shared a seed and the world-generation parameters with each client and let them generate the world on their own end &mdash; completely removing the need to sync generation across the network. On top of that, world objects spawn in as chunks load, similar to Minecraft, so undiscovered areas take up no processing or network bandwidth.</p>
+        <p>The server-authoritative model runs on ServerRPCs that handle any network-relevant change &mdash; the health of a mob or tower, the progress of the day/night cycle, and so on. The server stays the single source of truth, and clients defer to it for anything that affects shared state.</p>
+        <p>To keep things responsive, clients do some local prediction before sending ServerRPC data. Crucially, part of the hitbox logic &mdash; the color changes on hits and the sound effects &mdash; is handled client-side, so combat feels snappy instead of waiting on host confirmation.</p>
+        <!-- figure: drop a system diagram / flowchart / state machine here
+        <figure class="case-figure">
+            <img src="/images/case/your-diagram.png" alt="System diagram">
+            <figcaption>How the loop feeds back into itself.</figcaption>
+        </figure>
+        -->
+    </section>
+
+    <section class="case-section">
+        <h2>Iteration</h2>
+        <p>My first version had the host instantiate every world object as a NetworkObject. That guaranteed perfectly accurate replication across all clients &mdash; which sounded great until I hit the load times and heavy bandwidth usage that came with it, and the lag that followed. Next I tried spawning objects locally on each client and only &ldquo;promoting&rdquo; an object to a NetworkObject when its data actually needed to be shared &mdash; a tree taking damage, a structure breaking. But that introduced a noticeable delay every time a client interacted with something, so I scrapped it. I finally landed on a chunk-based object loading system. By no longer loading the entire world at once, it cut world-loading times dramatically and improved performance enormously.</p>
+        <p>The client-side hit feedback came straight out of playtesting. Players were immediately put off by the slight delay when hitting an object &mdash; and I agreed; smacking trees is a core gameplay element in any survival game, so it had to feel snappy. I moved to a local-prediction &rarr; server-confirmation flow, which worked great. I ended up taking the same approach for the item container systems, like sharing items between chests: predict locally, then confirm with the server.</p>
+        <!-- figure: a tuning spreadsheet, a balance curve, or a clip of two versions side by side -->
+    </section>
+
+    <section class="case-section">
+        <h2>Outcome</h2>
+        <p>GEODE shipped with full multiplayer for up to 8 players &mdash; the original goal, fully met, and I'm very happy with where it landed. The biggest single win was the move to chunk-based loading. Before, large worlds took around 30 seconds to load and suffered noticeable FPS drops from all the network syncing eating into processing time. After, large worlds load in about 5 seconds, with no performance penalty compared to a small world.</p>
+        <!-- figure: a GIF / short clip of the finished system in action -->
+    </section>
+
+    <section class="case-section">
+        <h2>What I'd change</h2>
+        <p>Honestly, I'm no longer sure server-authoritative was the right call. GEODE is meant to be played with friends &mdash; there are no public lobbies &mdash; so cheating isn't really a concern. If players want to cheat in their own private session, that's fine by me; it's contained. A lighter authority model might have saved me a lot of complexity for very little real benefit.</p>
+        <p>The item container system is the clearest thing I'd redesign. The driving logic between item slots, chests, and inventories currently stores wrapped item data &mdash; essentially just displaying ScriptableObject data. That worked until I wanted to add durability and enchantments, which simply isn't possible with this implementation. What I actually needed was instanced item data: an editable, per-item layer so two items of the same type could carry different modifiers and durability values.</p>
+        <p>I'd also design the main-menu &rarr; gameplay &rarr; main-menu flow in much more depth. I didn't think enough about cleaning up world data when returning to the menu, which led to a lot of bugfixing around &ldquo;second-generation&rdquo; worlds within a single playthrough. I hadn't accounted for which data needs to persist from launch, through world creation, and back again.</p>
+        <p>And one constraint I'll own outright: art quality. I won't sugarcoat it &mdash; I'm not an artist, the game doesn't look visually amazing, and I'm okay with that. My focus was the systems, and that's where I wanted the project to shine.</p>
+    </section>
+
+    <footer class="post-footer">
+        <a href="/projects" class="back-to-blog">← Back to projects</a>
+    </footer>
+</article>

@@ -35,13 +35,15 @@ router.get('/', async (req, res) => {
             page: page,
             totalPages,
             hasMore,
-            totalPosts
+            totalPosts,
+            minimal: true
         });
     } catch (error) {
         console.error('Error loading blog posts:', error);
-        res.status(500).render('error', { 
+        res.status(500).render('error', {
             message: 'Error loading blog posts',
-            error: process.env.NODE_ENV === 'development' ? error : {}
+            error: process.env.NODE_ENV === 'development' ? error : {},
+            minimal: true
         });
     }
 });
@@ -53,18 +55,20 @@ router.get('/:slug', async (req, res) => {
         const post = await blogManager.getPostBySlug(slug);
         
         if (!post) {
-            return res.status(404).render('error', { 
+            return res.status(404).render('error', {
                 message: 'Blog post not found',
-                error: {}
+                error: {},
+                minimal: true
             });
         }
 
-        res.render('blog-post', { post, currentPage: 'blog' });
+        res.render('blog-post', { post, currentPage: 'blog', minimal: true });
     } catch (error) {
         console.error('Error loading blog post:', error);
-        res.status(500).render('error', { 
+        res.status(500).render('error', {
             message: 'Error loading blog post',
-            error: process.env.NODE_ENV === 'development' ? error : {}
+            error: process.env.NODE_ENV === 'development' ? error : {},
+            minimal: true
         });
     }
 });

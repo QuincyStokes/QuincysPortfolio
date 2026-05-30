@@ -8,12 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
 function initBlog() {
     // Category filtering
     initCategoryFilter();
-    
+
     // Load more functionality
     initLoadMore();
-    
-    // Add smooth animations
-    addScrollAnimations();
 }
 
 // Category Filtering
@@ -45,7 +42,6 @@ function filterPostsByCategory(category) {
         
         if (category === 'all' || cardCategory === category) {
             card.style.display = 'block';
-            card.style.animation = 'fadeInUp 0.6s ease-out';
         } else {
             card.style.display = 'none';
         }
@@ -90,7 +86,7 @@ async function loadMorePosts() {
     
     // Disable button and show loading state
     loadMoreBtn.disabled = true;
-    loadMoreBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+    loadMoreBtn.textContent = 'Loading…';
     
     try {
         // Get active category
@@ -113,19 +109,13 @@ async function loadMorePosts() {
         // Add new posts to grid
         if (data.posts && data.posts.length > 0) {
             data.posts.forEach(post => {
-                const postCard = createPostCard(post);
-                blogGrid.appendChild(postCard);
-                
-                // Add animation
-                setTimeout(() => {
-                    postCard.style.animation = 'fadeInUp 0.6s ease-out';
-                }, 100);
+                blogGrid.appendChild(createPostCard(post));
             });
-            
+
             // Update load more button
             loadMoreBtn.dataset.page = nextPage;
             loadMoreBtn.disabled = false;
-            loadMoreBtn.innerHTML = 'Load More Posts <i class="fas fa-plus"></i>';
+            loadMoreBtn.textContent = 'Load more';
             
             // Hide load more button if no more posts
             if (!data.hasMore) {
@@ -145,8 +135,8 @@ async function loadMorePosts() {
         
         // Reset button state
         loadMoreBtn.disabled = false;
-        loadMoreBtn.innerHTML = 'Load More Posts <i class="fas fa-plus"></i>';
-        
+        loadMoreBtn.textContent = 'Load more';
+
         // Show error message
         showErrorMessage('Failed to load more posts. Please try again.');
     }
@@ -157,7 +147,6 @@ function createPostCard(post) {
     card.className = 'blog-card';
     card.dataset.category = post.category;
     
-    const categoryClass = post.category.toLowerCase().replace('-', '-');
     const formattedDate = new Date(post.published_at).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -165,39 +154,17 @@ function createPostCard(post) {
     });
     
     card.innerHTML = `
-        <div class="card-category ${categoryClass}">
-            ${post.category}
-        </div>
-        
-        <div class="card-content">
-            <h2 class="card-title">
-                <a href="/blog/${post.slug}" class="card-title-link">
-                    ${post.title}
-                </a>
-            </h2>
-            
-            <p class="card-excerpt">${post.excerpt}</p>
-            
-            <div class="card-meta">
-                <span class="meta-date">
-                    <i class="fas fa-calendar"></i>
-                    ${formattedDate}
-                </span>
-                <span class="meta-read-time">
-                    <i class="fas fa-clock"></i>
-                    ${post.readTime} min read
-                </span>
-            </div>
-        </div>
-        
-        <div class="card-footer">
-            <a href="/blog/${post.slug}" class="read-more-btn">
-                Read More
-                <i class="fas fa-arrow-right"></i>
-            </a>
+        <div class="card-category">${post.category}</div>
+        <h2 class="card-title">
+            <a href="/blog/${post.slug}" class="card-title-link">${post.title}</a>
+        </h2>
+        <p class="card-excerpt">${post.excerpt}</p>
+        <div class="card-meta">
+            <span class="meta-date">${formattedDate}</span>
+            <span class="meta-read-time">${post.readTime} min read</span>
         </div>
     `;
-    
+
     return card;
 }
 

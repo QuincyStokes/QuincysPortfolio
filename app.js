@@ -58,15 +58,20 @@ const BlogManager = require('./database/blogManager');
 
 // Routes
 app.get('/', (req, res) => {
-    res.render('index', { currentPage: 'home' });
+    res.render('index', { currentPage: 'home', minimal: true });
 });
 
 app.get('/projects', (req, res) => {
-    res.render('projects', { currentPage: 'projects' });
+    res.render('projects', { currentPage: 'projects', minimal: true });
 });
 
 app.get('/contact', (req, res) => {
-    res.render('contact', { currentPage: 'contact' });
+    res.render('contact', { currentPage: 'contact', minimal: true });
+});
+
+// Systems design case study (scaffold — not yet linked in the nav)
+app.get('/systems', (req, res) => {
+    res.render('case-study', { currentPage: 'systems', minimal: true });
 });
 
 // Blog routes

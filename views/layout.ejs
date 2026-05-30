@@ -15,16 +15,23 @@
         })();
     </script>
     
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/projects.css">
-    <link rel="stylesheet" href="/css/blog.css">
+    <% const isMinimal = typeof minimal !== 'undefined' && minimal; %>
+    <% if (isMinimal) { %>
+        <link rel="stylesheet" href="/css/minimal.css">
+    <% } else { %>
+        <link rel="stylesheet" href="/css/style.css">
+        <link rel="stylesheet" href="/css/projects.css">
+        <link rel="stylesheet" href="/css/blog.css">
+        <link rel="preload" href="/images/WorldScreenshot.png" as="image">
+    <% } %>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="preload" href="/images/WorldScreenshot.png" as="image">
 </head>
 <body>
-    <!-- Parallax Background -->
-    <div class="parallax-bg"></div>
-    
+    <% if (!isMinimal) { %>
+        <!-- Parallax Background -->
+        <div class="parallax-bg"></div>
+    <% } %>
+
     <!-- Content Overlay -->
     <div class="content-overlay">
         <nav class="navbar">
@@ -32,6 +39,7 @@
             <ul class="nav-links">
                 <li><a href="/" class="<%= typeof currentPage !== 'undefined' && currentPage === 'home' ? 'active' : '' %>">Home</a></li>
                 <li><a href="/projects" class="<%= typeof currentPage !== 'undefined' && currentPage === 'projects' ? 'active' : '' %>">Projects</a></li>
+                <li><a href="/systems" class="<%= typeof currentPage !== 'undefined' && currentPage === 'systems' ? 'active' : '' %>">Systems</a></li>
                 <li><a href="/blog" class="<%= typeof currentPage !== 'undefined' && currentPage === 'blog' ? 'active' : '' %>">Blog</a></li>
                 <li><a href="/contact" class="<%= typeof currentPage !== 'undefined' && currentPage === 'contact' ? 'active' : '' %>">Contact</a></li>
             </ul>

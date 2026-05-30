@@ -1,56 +1,51 @@
-console.log('[Carousel Debug] Script loaded and running');
+// Image carousel for project cards
 document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.project-card').forEach(function(card, cardIdx) {
+    document.querySelectorAll('.project-card[data-images]').forEach(function(card) {
         const images = JSON.parse(card.getAttribute('data-images'));
-        const alts = JSON.parse(card.getAttribute('data-alts'));
-        let currentIndex = 0;
+        const alts = JSON.parse(card.getAttribute('data-alts') || '[]');
         const img = card.querySelector('.carousel-img');
         const dots = card.querySelectorAll('.dot');
         const leftBtn = card.querySelector('.carousel-btn.left');
         const rightBtn = card.querySelector('.carousel-btn.right');
 
-        if (!img) console.warn(`[Carousel Debug] Card ${cardIdx}: .carousel-img not found.`);
-        if (!leftBtn) console.warn(`[Carousel Debug] Card ${cardIdx}: .carousel-btn.left not found.`);
-        if (!rightBtn) console.warn(`[Carousel Debug] Card ${cardIdx}: .carousel-btn.right not found.`);
-        if (dots.length === 0) console.warn(`[Carousel Debug] Card ${cardIdx}: .dot elements not found.`);
+        if (!img) return;
+
+        // A single image needs no controls — hide them.
+        if (images.length <= 1) {
+            if (leftBtn) leftBtn.style.display = 'none';
+            if (rightBtn) rightBtn.style.display = 'none';
+            const dotsRow = card.querySelector('.carousel-dots');
+            if (dotsRow) dotsRow.style.display = 'none';
+            return;
+        }
+
+        let currentIndex = 0;
 
         function updateCarousel() {
-            if (!img) return;
             img.src = images[currentIndex];
-            img.alt = alts[currentIndex];
-            dots.forEach((dot, idx) => {
-                dot.classList.toggle('active', idx === currentIndex);
-            });
-            console.log(`[Carousel Debug] Card ${cardIdx}: Updated to image index ${currentIndex} (src: ${images[currentIndex]}, alt: ${alts[currentIndex]})`);
+            img.alt = alts[currentIndex] || '';
+            dots.forEach((dot, idx) => dot.classList.toggle('active', idx === currentIndex));
         }
 
         if (leftBtn) {
             leftBtn.addEventListener('click', function() {
-                const prevIndex = currentIndex;
                 currentIndex = (currentIndex - 1 + images.length) % images.length;
-                console.log(`[Carousel Debug] Card ${cardIdx}: Left button clicked. Index: ${prevIndex} -> ${currentIndex}`);
                 updateCarousel();
             });
-            console.log(`[Carousel Debug] Card ${cardIdx}: Left button event attached.`);
         }
         if (rightBtn) {
             rightBtn.addEventListener('click', function() {
-                const prevIndex = currentIndex;
                 currentIndex = (currentIndex + 1) % images.length;
-                console.log(`[Carousel Debug] Card ${cardIdx}: Right button clicked. Index: ${prevIndex} -> ${currentIndex}`);
                 updateCarousel();
             });
-            console.log(`[Carousel Debug] Card ${cardIdx}: Right button event attached.`);
         }
         dots.forEach((dot, idx) => {
             dot.addEventListener('click', function() {
-                const prevIndex = currentIndex;
                 currentIndex = idx;
-                console.log(`[Carousel Debug] Card ${cardIdx}: Dot ${idx} clicked. Index: ${prevIndex} -> ${currentIndex}`);
                 updateCarousel();
             });
         });
-        console.log(`[Carousel Debug] Card ${cardIdx}: Carousel initialized with ${images.length} images.`);
+
         updateCarousel();
     });
-}); 
+});

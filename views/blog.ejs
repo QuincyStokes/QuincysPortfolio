@@ -1,83 +1,44 @@
-<div class="blog-container">
-    <div class="blog-header">
-        <h1 class="section-title">Blog</h1>
-        <p class="blog-intro">Thoughts, updates, and insights from my journey in game development and beyond.</p>
-    </div>
-
-    <!-- Category Filter -->
-    <div class="category-filter">
-        <button class="category-btn active" data-category="all">All Posts</button>
-        <button class="category-btn" data-category="Game-Dev">Game-Dev</button>
-        <button class="category-btn" data-category="Thoughts">Thoughts</button>
-        <button class="category-btn" data-category="Life-Updates">Life Updates</button>
-    </div>
-
-    <!-- Blog Posts Grid -->
-    <div class="blog-grid" id="blogGrid">
-        <% if (posts && posts.length > 0) { %>
-            <% posts.forEach(post => { %>
-                <article class="blog-card" data-category="<%= post.category %>">
-                    <div class="card-category <%= post.category.toLowerCase().replace('-', '-') %>">
-                        <%= post.category %>
-                    </div>
-                    
-                    <div class="card-content">
-                        <h2 class="card-title">
-                            <a href="/blog/<%= post.slug %>" class="card-title-link">
-                                <%= post.title %>
-                            </a>
-                        </h2>
-                        
-                        <p class="card-excerpt"><%= post.excerpt %></p>
-                        
-                        <div class="card-meta">
-                            <span class="meta-date">
-                                <i class="fas fa-calendar"></i>
-                                <%= new Date(post.published_at).toLocaleDateString('en-US', { 
-                                    year: 'numeric', 
-                                    month: 'long', 
-                                    day: 'numeric' 
-                                }) %>
-                            </span>
-                            <span class="meta-read-time">
-                                <i class="fas fa-clock"></i>
-                                <%= post.readTime %> min read
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="card-footer">
-                        <a href="/blog/<%= post.slug %>" class="read-more-btn">
-                            Read More
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </article>
-            <% }); %>
-        <% } else { %>
-            <div class="no-posts">
-                <h3>No blog posts yet</h3>
-                <p>Check back soon for my first post!</p>
-            </div>
-        <% } %>
-    </div>
-
-    <!-- Load More Button -->
-    <% if (hasMore) { %>
-        <div class="load-more-container">
-            <button class="load-more-btn" id="loadMoreBtn" data-page="<%= currentPage %>">
-                Load More Posts
-                <i class="fas fa-plus"></i>
-            </button>
-        </div>
-    <% } %>
-
-    <!-- Post Count -->
-    <div class="post-count">
-        <p>Showing <%= posts.length %> of <%= totalPosts %> posts</p>
-    </div>
+<div class="page-intro">
+    <h1>Blog</h1>
+    <p>Thoughts, updates, and insights from my journey in game development and beyond.</p>
 </div>
 
-<script>
-    // Blog functionality will be loaded from blog.js
-</script> 
+<div class="category-filter">
+    <button class="category-btn active" data-category="all">All</button>
+    <button class="category-btn" data-category="Game-Dev">Game-Dev</button>
+    <button class="category-btn" data-category="Thoughts">Thoughts</button>
+    <button class="category-btn" data-category="Life-Updates">Life Updates</button>
+</div>
+
+<div class="blog-grid" id="blogGrid">
+    <% if (posts && posts.length > 0) { %>
+        <% posts.forEach(post => { %>
+            <article class="blog-card" data-category="<%= post.category %>">
+                <div class="card-category"><%= post.category %></div>
+                <h2 class="card-title">
+                    <a href="/blog/<%= post.slug %>" class="card-title-link"><%= post.title %></a>
+                </h2>
+                <p class="card-excerpt"><%= post.excerpt %></p>
+                <div class="card-meta">
+                    <span class="meta-date"><%= new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+                    <span class="meta-read-time"><%= post.readTime %> min read</span>
+                </div>
+            </article>
+        <% }); %>
+    <% } else { %>
+        <div class="no-posts">
+            <h3>No blog posts yet</h3>
+            <p>Check back soon for my first post.</p>
+        </div>
+    <% } %>
+</div>
+
+<% if (hasMore) { %>
+    <div class="load-more-container">
+        <button class="load-more-btn" id="loadMoreBtn" data-page="<%= currentPage %>">Load more</button>
+    </div>
+<% } %>
+
+<div class="post-count">
+    <p>Showing <%= posts.length %> of <%= totalPosts %> posts</p>
+</div>

@@ -1,42 +1,18 @@
-<div class="blog-post-container">
-    <article class="blog-post">
-        <!-- Post Header -->
-        <header class="post-header">
-            <div class="post-category <%= post.category.toLowerCase().replace('-', '-') %>">
-                <%= post.category %>
-            </div>
-            
-            <h1 class="post-title"><%= post.title %></h1>
-            
-            <div class="post-meta">
-                <span class="meta-date">
-                    <i class="fas fa-calendar"></i>
-                    <%= new Date(post.published_at).toLocaleDateString('en-US', { 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                    }) %>
-                </span>
-                <span class="meta-read-time">
-                    <i class="fas fa-clock"></i>
-                    <%= post.readTime %> min read
-                </span>
-            </div>
-        </header>
-
-        <!-- Post Content -->
-        <div class="post-content">
-            <%- post.htmlContent %>
+<article class="blog-post">
+    <header class="post-header">
+        <div class="post-category"><%= post.category %></div>
+        <h1 class="post-title"><%= post.title %></h1>
+        <div class="post-meta">
+            <span class="meta-date"><%= new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %></span>
+            <span class="meta-read-time"><%= post.readTime %> min read</span>
         </div>
+    </header>
 
-        <!-- Post Footer -->
-        <footer class="post-footer">
-            <div class="post-navigation">
-                <a href="/blog" class="back-to-blog">
-                    <i class="fas fa-arrow-left"></i>
-                    Back to Blog
-                </a>
-            </div>
-        </footer>
-    </article>
-</div> 
+    <div class="post-content">
+        <%- post.htmlContent %>
+    </div>
+
+    <footer class="post-footer">
+        <a href="/blog" class="back-to-blog">← Back to blog</a>
+    </footer>
+</article>
