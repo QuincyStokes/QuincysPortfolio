@@ -695,31 +695,6 @@ section + section {
 .back-to-blog:hover { opacity: 0.55; }
 
 /* Systems case study */
-.case-gallery {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin: 2.5rem 0 3rem;
-}
-
-.case-gallery figure { margin: 0; }
-
-.case-gallery img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border: 1px solid var(--border);
-}
-
-.case-gallery figcaption {
-    margin-top: 0.5rem;
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-muted);
-    text-align: center;
-}
-
 /* Inline document links (résumé, etc.) */
 .doc-link {
     display: inline-block;
@@ -828,5 +803,4 @@ section + section {
     section + section { margin-top: 3.5rem; padding-top: 3rem; }
     .skills-list { grid-template-columns: 1fr; gap: 2rem; }
     .post-title { font-size: 1.6rem; }
-    .case-gallery { grid-template-columns: 1fr; }
 }
