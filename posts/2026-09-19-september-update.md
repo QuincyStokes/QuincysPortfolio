@@ -21,6 +21,15 @@ Right now there are still a few things I need to finish before releasing a more 
 
 I really hope to be able to get these done within the next few weeks or month, I'm feeling good about working on it right now. 
 
+Some fun stats about GEODE, just to reflect back on:
+As of 9/19/2026
+- 1,191 Lifetime unique users
+- 32 minutes median play time
+- 685 wishlists
+- 30 reviews, 29 positive, 1 negative
+
+Far more than I ever expected on all of these metrics.
+
 # Other Projects
 
 On top of GEODE, I'm really looking forward to starting some other projects. There are some 3d ideas I'd like to try out, as well as dipping my toes into Unreal Engine a bit more. 
